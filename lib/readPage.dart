@@ -142,182 +142,189 @@ class _DetailReadPageState extends State<DetailReadPage> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    vaazCal();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onBackPressed,
-      child: Scaffold(
-        backgroundColor: Colors.blue,
-        appBar: AppBar(
-          title: AnimatedTextKit(
-            animatedTexts: [
-              TypewriterAnimatedText(
-                widget.name,
-                textStyle: const TextStyle(
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
+    return Scaffold(
+      backgroundColor: Colors.blue,
+      appBar: AppBar(
+        title: AnimatedTextKit(
+          animatedTexts: [
+            TypewriterAnimatedText(
+              widget.name,
+              textStyle: const TextStyle(
+                fontSize: 25.0,
+                fontWeight: FontWeight.bold,
+              ),
+              speed: const Duration(milliseconds: 500),
+            ),
+          ],
+          totalRepeatCount: 4,
+          pause: const Duration(milliseconds: 1000),
+          displayFullTextOnTap: true,
+          stopPauseOnTap: true,
+        ),
+        leading: IconButton(
+          onPressed: () {
+            setState(() async {
+              Navigator.of(context).pop();
+            });
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
+      ),
+      //let's start by creating the main UI of the app
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+              colors: [
+                Theme.of(context).backgroundColor,
+                Theme.of(context).scaffoldBackgroundColor
+              ],
+              tileMode: TileMode.mirror),
+        ),
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //Let's add some text title
+              Expanded(
+                flex: 2,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        widget.sureName,
+                        style: TextStyle(
+                          fontSize: 25,
+                        ),
+                      ),
+                      Container(
+                        height: 700,
+                        color: Colors.yellow,
+                        child: FutureBuilder(
+                          future: callKuran(),
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
+                            if (snapshot.hasData) {
+                              return ListView.builder(
+                                itemCount: counter,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Card(
+                                    child: ListTile(
+                                      title: Text(
+                                        personalResult.data.verses[index].verse,
+                                        style: TextStyle(
+                                            fontSize: 35, fontFamily: 'Latif'),
+                                      ),
+                                      subtitle: Text(
+                                        personalResult.data.verses[index]
+                                                .transcription +
+                                            '\n\nMeal:\n' +
+                                            personalResult.data.verses[index]
+                                                .translation.text,
+                                      ),
+                                      leading: CircleAvatar(
+                                        child: Text(personalResult
+                                            .data.verses[index].verseNumber
+                                            .toString()),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                            return Center(child: CircularProgressIndicator());
+                          },
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          widget.sureName,
+                          overflow: TextOverflow.visible,
+                          style: TextStyle(fontSize: 25.0),
+                          textAlign: TextAlign.center,
+                          textWidthBasis: TextWidthBasis.parent,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                speed: const Duration(milliseconds: 500),
+              ),
+
+              Expanded(
+                flex: 1,
+                child: Container(
+                  // constraints: BoxConstraints.tightForFinite(width: 500),
+                  //padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      //Let's start by adding the controller
+                      //let's add the time indicator text
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        color: Colors.green[300],
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "${duration.inMinutes}:${duration.inSeconds.remainder(60)}",
+                              style: TextStyle(
+                                fontSize: 15.0,
+                              ),
+                            ),
+                            slider(),
+                            Text(
+                              "${position.inMinutes}:${position.inSeconds.remainder(60)}",
+                              style: TextStyle(
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              iconSize: 100.0,
+                              color: Colors.blue[800],
+                              onPressed: () {
+                                //here we will add the functionality of the play button
+                                setState(() {
+                                  vaazCal();
+                                });
+                              },
+                              icon: Icon(
+                                playing == false
+                                    ? Icons.play_circle_outline
+                                    : Icons.pause_circle_outline,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ),
             ],
-            totalRepeatCount: 4,
-            pause: const Duration(milliseconds: 1000),
-            displayFullTextOnTap: true,
-            stopPauseOnTap: true,
-          ),
-          leading: IconButton(
-            onPressed: () {
-              setState(() async {
-                Navigator.of(context).pop();
-              });
-            },
-            icon: Icon(Icons.arrow_back),
-          ),
-        ),
-        //let's start by creating the main UI of the app
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.centerRight,
-                end: Alignment.centerLeft,
-                colors: [
-                  Theme.of(context).backgroundColor,
-                  Theme.of(context).scaffoldBackgroundColor
-                ],
-                tileMode: TileMode.mirror),
-          ),
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //Let's add some text title
-                Expanded(
-                  flex: 2,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 700,
-                          color: Colors.yellow,
-                          child: FutureBuilder(
-                            future: callKuran(),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.hasData) {
-                                return ListView.builder(
-                                  itemCount: counter,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return Card(
-                                      child: ListTile(
-                                        title: Text(
-                                          personalResult
-                                              .data.verses[index].verse,
-                                          style: TextStyle(
-                                              fontSize: 35,
-                                              fontFamily: 'Latif'),
-                                        ),
-                                        subtitle: Text(
-                                          personalResult.data.verses[index]
-                                                  .transcription +
-                                              '\n\nMeal:\n' +
-                                              personalResult.data.verses[index]
-                                                  .translation.text,
-                                        ),
-                                        leading: CircleAvatar(
-                                          child: Text(personalResult
-                                              .data.verses[index].verseNumber
-                                              .toString()),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              }
-                              return Center(child: CircularProgressIndicator());
-                            },
-                          ),
-                        ),
-                        Center(
-                          child: Text(
-                            widget.sureName,
-                            overflow: TextOverflow.visible,
-                            style: TextStyle(fontSize: 25.0),
-                            textAlign: TextAlign.center,
-                            textWidthBasis: TextWidthBasis.parent,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    // constraints: BoxConstraints.tightForFinite(width: 500),
-                    //padding: EdgeInsets.all(10.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        //Let's start by adding the controller
-                        //let's add the time indicator text
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                          color: Colors.green[300],
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${duration.inMinutes}:${duration.inSeconds.remainder(60)}",
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                ),
-                              ),
-                              slider(),
-                              Text(
-                                "${position.inMinutes}:${position.inSeconds.remainder(60)}",
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                iconSize: 100.0,
-                                color: Colors.blue[800],
-                                onPressed: () {
-                                  //here we will add the functionality of the play button
-                                  setState(() {
-                                    vaazCal();
-                                  });
-                                },
-                                icon: Icon(
-                                  playing == false
-                                      ? Icons.play_circle_outline
-                                      : Icons.pause_circle_outline,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),
