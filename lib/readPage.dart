@@ -1,7 +1,7 @@
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -10,14 +10,14 @@ import 'package:kuran_01/suremodel.dart';
 class DetailReadPage extends StatefulWidget {
   final String name;
   final String server;
-  final String Sira;
-  final String SureName;
+  final String ayetSira;
+  final String sureName;
 
   const DetailReadPage({
     required this.name,
     required this.server,
-    required this.Sira,
-    required this.SureName,
+    required this.ayetSira,
+    required this.sureName,
   });
 
   @override
@@ -62,7 +62,7 @@ class _DetailReadPageState extends State<DetailReadPage> {
 //http://server9.mp3quran.net/zahrani/003.mp3
 //http://server9.mp3quran.net/zahrani/003.mp3
   void vaazCal() async {
-    final url = widget.server + '/' + widget.Sira + '.mp3';
+    final url = widget.server + '/' + widget.ayetSira + '.mp3';
     print(url);
     if (playing) {
       var res = await audioPlayer.pause();
@@ -242,7 +242,7 @@ class _DetailReadPageState extends State<DetailReadPage> {
                         ),
                         Center(
                           child: Text(
-                            widget.SureName,
+                            widget.sureName,
                             overflow: TextOverflow.visible,
                             style: TextStyle(fontSize: 25.0),
                             textAlign: TextAlign.center,
@@ -325,7 +325,7 @@ class _DetailReadPageState extends State<DetailReadPage> {
   }
 
   Future callKuran() async {
-    var url = Uri.parse('https://api.acikkuran.com/surah/${widget.Sira}');
+    var url = Uri.parse('https://api.acikkuran.com/surah/${widget.ayetSira}');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {

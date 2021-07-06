@@ -166,10 +166,10 @@ class _ReciterPageState extends State<ReciterPage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => DetailReadPage(
-                      Sira: _sureListesi[index].Sira,
+                      ayetSira: _sureListesi[index].Sira,
                       name: widget.name,
                       server: widget.server,
-                      SureName: _sureListesi[index].SureName,
+                      sureName: _sureListesi[index].SureName,
                     ),
                   ),
                 );
