@@ -101,51 +101,11 @@ class _DetailReadPageState extends State<DetailReadPage> {
     };
   }
 
-  Future<bool> _onBackPressed() async {
-    final shouldPop = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            'Are you sure?',
-            style: TextStyle(fontSize: 25.0, color: Colors.black),
-          ),
-          content: Text('You are going to exit'),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // ignore: deprecated_member_use
-                FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text('Hayir',
-                      style: TextStyle(fontSize: 25.0, color: Colors.black)),
-                ),
-                // ignore: deprecated_member_use
-                FlatButton(
-                  focusColor: Colors.green,
-                  onPressed: () async {
-                    Navigator.of(context).pop(true);
-                  },
-                  child: Text('Evet',
-                      style: TextStyle(fontSize: 25.0, color: Colors.black)),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-    return shouldPop ?? false;
-  }
-
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    vaazCal();
+    audioPlayer.stop();
   }
 
   @override
@@ -210,8 +170,8 @@ class _DetailReadPageState extends State<DetailReadPage> {
                         ),
                       ),
                       Container(
-                        height: 700,
-                        color: Colors.yellow,
+                        height: 490,
+                        color: Colors.lightGreen,
                         child: FutureBuilder(
                           future: callKuran(),
                           builder:
@@ -248,15 +208,15 @@ class _DetailReadPageState extends State<DetailReadPage> {
                           },
                         ),
                       ),
-                      Center(
-                        child: Text(
-                          widget.sureName,
-                          overflow: TextOverflow.visible,
-                          style: TextStyle(fontSize: 25.0),
-                          textAlign: TextAlign.center,
-                          textWidthBasis: TextWidthBasis.parent,
-                        ),
-                      ),
+                      // Center(
+                      //   child: Text(
+                      //     widget.sureName,
+                      //     overflow: TextOverflow.visible,
+                      //     style: TextStyle(fontSize: 25.0),
+                      //     textAlign: TextAlign.center,
+                      //     textWidthBasis: TextWidthBasis.parent,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
